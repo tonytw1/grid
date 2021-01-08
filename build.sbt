@@ -4,6 +4,8 @@ import scala.sys.process._
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
 
+traceLevel in run := 0
+
 val commonSettings = Seq(
   scalaVersion := "2.12.10",
   description := "grid",
