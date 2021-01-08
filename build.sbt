@@ -25,29 +25,7 @@ val commonSettings = Seq(
 
 lazy val root = project("grid", path = Some("."))
   .aggregate(commonLib, auth, collections, cropper, imageLoader, leases, thrall, kahuna, metadataEditor, usage, mediaApi, adminToolsLambda, adminToolsScripts, adminToolsDev)
-  .enablePlugins(RiffRaffArtifact)
-  .settings(
-    riffRaffManifestProjectName := s"media-service::grid::all",
-    riffRaffUploadArtifactBucket := Some("riffraff-artifact"),
-    riffRaffUploadManifestBucket := Some("riffraff-builds"),
-    riffRaffArtifactResources := Seq(
-      (packageBin in Debian in auth).value -> s"${(name in auth).value}/${(name in auth).value}.deb",
-      (packageBin in Debian in collections).value -> s"${(name in collections).value}/${(name in collections).value}.deb",
-      (packageBin in Debian in cropper).value -> s"${(name in cropper).value}/${(name in cropper).value}.deb",
-      (packageBin in Debian in imageLoader).value -> s"${(name in imageLoader).value}/${(name in imageLoader).value}.deb",
-      // image-loader-projection uses the same deb as image-loader, we're running it for isolation of traffic in batch reindexing
-      (packageBin in Debian in imageLoader).value -> s"${(name in imageLoader).value}-projection/${(name in imageLoader).value}-projection.deb",
-      (packageBin in Debian in leases).value -> s"${(name in leases).value}/${(name in leases).value}.deb",
-      (packageBin in Debian in thrall).value -> s"${(name in thrall).value}/${(name in thrall).value}.deb",
-      (packageBin in Debian in kahuna).value -> s"${(name in kahuna).value}/${(name in kahuna).value}.deb",
-      (packageBin in Debian in metadataEditor).value -> s"${(name in metadataEditor).value}/${(name in metadataEditor).value}.deb",
-      (packageBin in Debian in usage).value -> s"${(name in usage).value}/${(name in usage).value}.deb",
-      (packageBin in Debian in mediaApi).value -> s"${(name in mediaApi).value}/${(name in mediaApi).value}.deb",
-      // pull in s3watcher build
-      file("s3watcher/lambda/target/s3watcher.zip") -> "s3watcher/s3watcher.zip",
-      file("riff-raff.yaml") -> "riff-raff.yaml"
-    )
-  )
+
 
 addCommandAlias("runAll", "all auth/run media-api/run thrall/run image-loader/run metadata-editor/run kahuna/run collections/run cropper/run usage/run leases/run admin-tools-dev/run")
 
@@ -171,7 +149,6 @@ lazy val adminToolsLib = project("admin-tools-lib", Some("admin-tools/lib"))
   ).dependsOn(commonLib)
 
 lazy val adminToolsLambda = project("admin-tools-lambda", Some("admin-tools/lambda"))
-  .enablePlugins(RiffRaffArtifact)
   .settings(
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", xs@_*) => MergeStrategy.discard
@@ -185,11 +162,7 @@ lazy val adminToolsLambda = project("admin-tools-lambda", Some("admin-tools/lamb
   )
   .dependsOn(adminToolsLib)
   .settings(
-    assemblyJarName := s"${name.value}.jar",
-    riffRaffPackageType := assembly.value,
-    riffRaffUploadArtifactBucket := Some("riffraff-artifact"),
-    riffRaffUploadManifestBucket := Some("riffraff-builds"),
-    riffRaffManifestProjectName := s"media-service::grid::admin-tools-lambda"
+    assemblyJarName := s"${name.value}.jar"
   )
 
 lazy val adminToolsScripts = project("admin-tools-scripts", Some("admin-tools/scripts"))
