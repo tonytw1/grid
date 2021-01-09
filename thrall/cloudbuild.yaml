@@ -5,3 +5,5 @@ steps:
     args: ['thrall/dist']
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', 'thrall']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/$PROJECT_ID/thrall']
