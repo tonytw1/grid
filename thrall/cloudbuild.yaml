@@ -3,3 +3,5 @@ options:
 steps:
   - name: 'gcr.io/$PROJECT_ID/scala-sbt'
     args: ['thrall/dist']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', 'thrall']
