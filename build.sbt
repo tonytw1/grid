@@ -189,8 +189,7 @@ lazy val thrall = playProject("thrall", 9002).settings(
     "com.streetcontxt" %% "kcl-akka-stream" % "2.1.0",
     "com.whisk" %% "docker-testkit-scalatest" % "0.9.8" % Test,
     "com.whisk" %% "docker-testkit-impl-spotify" % "0.9.8" % Test
-  ),
-  libraryDependencies += guice
+  )
 )
 
 lazy val usage = playProject("usage", 9009).settings(
