@@ -22,13 +22,14 @@ This archive should extracted to /usr/share/thrall
 
 ## Running from an image
 
+The active Play config file is:
 ```
-docker run -it eu.gcr.io/grid-301122/thrall:latest
+/usr/share/thrall/conf/application.conf
+```
+
+So a conf file can be past in like so:
+```
+docker run -it -v /Users/tony/git/forks/grid/thrall/conf/application.conf:/usr/share/thrall/conf/application.conf eu.gcr.io/grid-301122/thrall:latest
 ```
 
 The following configuration must be supplied:
-
-Oops, cannot start the server.
-java.lang.RuntimeException: Required string configuration property missing: thrall.kinesis.stream.name
-
-
