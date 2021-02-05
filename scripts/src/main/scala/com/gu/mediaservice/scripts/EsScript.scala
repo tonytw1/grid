@@ -384,7 +384,6 @@ abstract class EsScript {
   }
 
   abstract class EsClient extends ElasticSearchClient {
-    override def cluster = esCluster
     override def imagesAlias = esImagesAlias
     override def shards = esShards
     override def replicas = esReplicas

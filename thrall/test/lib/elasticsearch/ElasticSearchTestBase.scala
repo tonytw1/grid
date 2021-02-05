@@ -25,7 +25,7 @@ trait ElasticSearchTestBase extends FreeSpec with Matchers with Fixtures with Be
   val oneHundredMilliseconds = Duration(100, MILLISECONDS)
   val fiveSeconds = Duration(5, SECONDS)
 
-  val elasticSearchConfig = ElasticSearchConfig("writealias", esTestUrl, "media-service-test", 1, 0)
+  val elasticSearchConfig = ElasticSearchConfig("writealias", esTestUrl, 1, 0)
 
   val ES = new ElasticSearch(elasticSearchConfig, None)
   val esContainer = if (useEsDocker) Some(DockerContainer("docker.elastic.co/elasticsearch/elasticsearch:7.5.2")

@@ -23,7 +23,6 @@ class ThrallComponents(context: Context) extends GridComponents(context, new Thr
   val esConfig = ElasticSearchConfig(
     alias = config.writeAlias,
     url = config.elasticsearch6Url,
-    cluster = config.elasticsearch6Cluster,
     shards = config.elasticsearch6Shards,
     replicas = config.elasticsearch6Replicas
   )

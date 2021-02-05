@@ -36,7 +36,6 @@ class ThrallConfig(resources: GridConfigResources) extends CommonConfig(resource
   val thumbnailBucket: String = string("s3.thumb.bucket")
 
   val elasticsearch6Url: String =  string("es6.url")
-  val elasticsearch6Cluster: String = string("es6.cluster")
   val elasticsearch6Shards: Int = string("es6.shards").toInt
   val elasticsearch6Replicas: Int = string("es6.replicas").toInt
 

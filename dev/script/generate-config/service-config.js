@@ -107,7 +107,6 @@ function getMediaApiConfig(config) {
         |persistence.identifier="picdarUrn"
         |es.index.aliases.read="readAlias"
         |es6.url="${config.es6.url}"
-        |es6.cluster="${config.es6.cluster}"
         |es6.shards=${config.es6.shards}
         |es6.replicas=${config.es6.replicas}
         |quota.store.key="rcs-quota.json"

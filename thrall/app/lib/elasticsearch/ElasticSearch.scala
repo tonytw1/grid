@@ -27,7 +27,6 @@ class ElasticSearch(config: ElasticSearchConfig, metrics: Option[ThrallMetrics])
 
   lazy val imagesAlias: String = config.alias
   lazy val url: String = config.url
-  lazy val cluster: String = config.cluster
   lazy val shards: Int = config.shards
   lazy val replicas: Int = config.replicas
 
