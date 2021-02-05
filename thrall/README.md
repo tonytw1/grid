@@ -1,6 +1,6 @@
 # thrall
 
-Thralls pulls update messages from a queue, interprets them, and modifies an Elasticsearch index accordingly.
+Thrall pulls update messages from a queue, interprets them and modifies the Elasticsearch index and image buckets accordingly.
 
 ## Build
 
@@ -33,3 +33,12 @@ docker run -it -v /Users/tony/git/forks/grid/thrall/conf/application.conf:/usr/s
 ```
 
 The following configuration must be supplied:
+
+Kinesis queue details
+To consume update messages.
+
+s3 bucket details
+For handling delete image messages.
+
+Elastic search details
+For connecting to Elastic search and setting up the initial index if required.
