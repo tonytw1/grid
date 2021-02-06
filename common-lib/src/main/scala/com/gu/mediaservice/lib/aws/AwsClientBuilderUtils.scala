@@ -11,6 +11,8 @@ trait AwsClientBuilderUtils extends GridLogging {
 
   def awsRegion: String = "eu-west-1"
 
+  // TODO Config extending this class to advertise withAWSCredentials is proving quite immuteable;
+  // awsCredentials and awsEndpointConfiguration likewise feel like config functions
   def awsCredentials: AWSCredentialsProvider = new AWSCredentialsProviderChain(
     new ProfileCredentialsProvider("media-service"),
     InstanceProfileCredentialsProvider.getInstance()
