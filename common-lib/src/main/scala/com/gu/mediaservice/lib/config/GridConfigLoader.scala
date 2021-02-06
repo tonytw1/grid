@@ -6,7 +6,7 @@ import com.typesafe.config.ConfigFactory
 import com.typesafe.scalalogging.StrictLogging
 import play.api.{Configuration, Mode}
 
-object GridConfigLoader extends StrictLogging {
+object GridConfigLoader extends StrictLogging { // TODO Remove to push all config to reveal itself in application.conf
   val STAGE_KEY = "grid.stage"
   val APP_KEY = "grid.appName"
 
