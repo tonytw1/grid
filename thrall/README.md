@@ -52,3 +52,9 @@ indexed.image.sns.topic.arn
 Typesafe scala logging is the logging framework with logback as the backend.
 Thrall logging is configured from ```common-lib/src/main/resources/logback.xml```
 which is packaged into ```/usr/share/thrall/conf/logback.xml``` in the the Thrall image.
+
+
+## AWS authentication
+
+TODO Migrate to access tokens
+new ProfileCredentialsProvider("media-service")

@@ -15,7 +15,7 @@ class CrierStreamReader(config: UsageConfig) extends GridLogging {
   lazy val workerId: String = InetAddress.getLocalHost.getCanonicalHostName + ":" + UUID.randomUUID()
 
   val credentialsProvider = new AWSCredentialsProviderChain(
-    new ProfileCredentialsProvider("media-service"),
+    new ProfileCredentialsProvider("media-service"),  // TODO Remove this deep reference to AWS profile
     InstanceProfileCredentialsProvider.getInstance()
   )
 

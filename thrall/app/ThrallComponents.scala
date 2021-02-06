@@ -3,6 +3,7 @@ import akka.stream.scaladsl.Source
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.KinesisClientLibConfiguration
 import com.contxt.kinesis.{KinesisRecord, KinesisSource}
 import com.gu.mediaservice.lib.elasticsearch.ElasticSearchConfig
+import com.gu.mediaservice.lib.logging.GridLogging
 import com.gu.mediaservice.lib.play.GridComponents
 import controllers.{HealthCheck, ThrallController}
 import lib._
@@ -13,7 +14,7 @@ import router.Routes
 
 import scala.concurrent.Future
 
-class ThrallComponents(context: Context) extends GridComponents(context, new ThrallConfig(_)) {
+class ThrallComponents(context: Context) extends GridComponents(context, new ThrallConfig(_)) with GridLogging {
   final override val buildInfo = utils.buildinfo.BuildInfo
 
   val store = new ThrallStore(config)
@@ -27,7 +28,10 @@ class ThrallComponents(context: Context) extends GridComponents(context, new Thr
     replicas = config.elasticsearch6Replicas
   )
 
+  println("!!!!!!!! Connecting to Elasticsearch at url: " + esConfig.url)
+  logger.info("!!!! Connecting to Elasticsearch at url: " + esConfig.url)
   val es = new ElasticSearch(esConfig, Some(thrallMetrics))
+  println("!!!!!!!! Checking alias: " + esConfig.url)
   es.ensureAliasAssigned()
 
   val highPriorityKinesisConfig: KinesisClientLibConfiguration = KinesisConfig.kinesisConfig(config.kinesisConfig)
