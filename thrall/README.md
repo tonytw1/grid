@@ -29,7 +29,7 @@ The active Play config file is:
 
 So a conf file can be past in like so:
 ```
-docker run -it -v /Users/tony/git/forks/grid/thrall/conf/application.conf:/usr/share/thrall/conf/application.conf eu.gcr.io/grid-301122/thrall:latest
+docker run -it -v /Users/tony/git/forks/grid/thrall/application.conf:/usr/share/thrall/conf/application.conf eu.gcr.io/grid-301122/thrall:latest
 ```
 
 The following configuration must be supplied:
@@ -42,3 +42,6 @@ For handling delete image messages.
 
 Elastic search details
 For connecting to Elastic search and setting up the initial index if required.
+
+indexed.image.sns.topic.arn
+???
