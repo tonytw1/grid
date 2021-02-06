@@ -45,3 +45,10 @@ For connecting to Elastic search and setting up the initial index if required.
 
 indexed.image.sns.topic.arn
 ???
+
+
+## Logging
+
+Typesafe scala logging is the logging framework with logback as the backend.
+Thrall logging is configured from ```common-lib/src/main/resources/logback.xml```
+which is packaged into ```/usr/share/thrall/conf/logback.xml``` in the the Thrall image.
