@@ -28,10 +28,7 @@ class ThrallComponents(context: Context) extends GridComponents(context, new Thr
     replicas = config.elasticsearch6Replicas
   )
 
-  println("!!!!!!!! Connecting to Elasticsearch at url: " + esConfig.url)
-  logger.info("!!!! Connecting to Elasticsearch at url: " + esConfig.url)
   val es = new ElasticSearch(esConfig, Some(thrallMetrics))
-  println("!!!!!!!! Checking alias: " + esConfig.url)
   es.ensureAliasAssigned()
 
   val highPriorityKinesisConfig: KinesisClientLibConfiguration = KinesisConfig.kinesisConfig(config.kinesisConfig)
