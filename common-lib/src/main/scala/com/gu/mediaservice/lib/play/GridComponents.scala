@@ -50,14 +50,19 @@ abstract class GridComponents[Config <: CommonConfig](context: Context, val load
     controllerComponents = controllerComponents
   )
 
-  val providers: AuthenticationProviders = AuthenticationProviders(
+  // TODO non authed components like thrall should not have to provide auth configuration and dependencies
+  lazy val providers: AuthenticationProviders = AuthenticationProviders(
     userProvider = config.configuration.get[UserAuthenticationProvider]("authentication.providers.user")(UserAuthenticationProviderLoader.singletonConfigLoader(authProviderResources)),
     apiProvider = config.configuration.get[MachineAuthenticationProvider]("authentication.providers.machine")(ApiAuthenticationProviderLoader.singletonConfigLoader(authProviderResources))
   )
-  providers.userProvider.initialise()
-  applicationLifecycle.addStopHook(() => providers.userProvider.shutdown())
-  providers.apiProvider.initialise()
-  applicationLifecycle.addStopHook(() => providers.apiProvider.shutdown())
 
-  val auth = new Authentication(config, providers, controllerComponents.parsers.default, executionContext)
+  // TODO non authed components like thrall should not have to provide auth configuration and dependencies
+  lazy val auth = {
+    providers.userProvider.initialise()
+    applicationLifecycle.addStopHook(() => providers.userProvider.shutdown())
+    providers.apiProvider.initialise()
+    applicationLifecycle.addStopHook(() => providers.apiProvider.shutdown())
+
+    new Authentication(config, providers, controllerComponents.parsers.default, executionContext)
+  }
 }
