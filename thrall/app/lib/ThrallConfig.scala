@@ -1,6 +1,7 @@
 package lib
 
 import com.amazonaws.auth.AWSCredentialsProvider
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.amazonaws.services.kinesis.metrics.interfaces.MetricsLevel
 import com.gu.mediaservice.lib.aws.AwsClientBuilderUtils
 import com.gu.mediaservice.lib.config.{CommonConfig, GridConfigResources}
@@ -8,10 +9,10 @@ import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
 case class KinesisReceiverConfig(
-  override val awsRegion: String,
+ override val awsRegion: String,
   override val awsCredentials: AWSCredentialsProvider,
-  override val awsLocalEndpoint: Option[String],
-  override val isDev: Boolean,
+  override val awsEndpointConfiguration: Option[EndpointConfiguration],
+  awsLocalEndpoint: Option[String],
   streamName: String,
   rewindFrom: Option[DateTime],
   metricsLevel: MetricsLevel = MetricsLevel.DETAILED
@@ -21,8 +22,8 @@ object KinesisReceiverConfig {
   def apply(streamName: String, rewindFrom: Option[DateTime], thrallConfig: ThrallConfig): KinesisReceiverConfig = KinesisReceiverConfig(
     thrallConfig.awsRegion,
     thrallConfig.awsCredentials,
+    thrallConfig.awsEndpointConfiguration,
     thrallConfig.awsLocalEndpoint,
-    thrallConfig.isDev,
     streamName,
     rewindFrom
   )

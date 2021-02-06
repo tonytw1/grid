@@ -1,7 +1,10 @@
 package com.gu.mediaservice.lib.config
 
-import java.util.UUID
+import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 
+import java.util.UUID
 import com.gu.mediaservice.lib.aws.{AwsClientBuilderUtils, KinesisSenderConfig}
 import com.typesafe.config.ConfigException
 import com.typesafe.scalalogging.StrictLogging
@@ -24,11 +27,11 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
   val stage: String = string(GridConfigLoader.STAGE_KEY)
   val appName: String = string(GridConfigLoader.APP_KEY)
   val isProd: Boolean = stage == "PROD"
-  override val isDev: Boolean = stage == "DEV"
+  val isDev: Boolean = stage == "DEV"
 
   override val awsRegion: String = stringDefault("aws.region", "eu-west-1")
 
-  override val awsLocalEndpoint: Option[String] = if(isDev) stringOpt("aws.local.endpoint") else None
+  val awsLocalEndpoint: Option[String] = if(isDev) stringOpt("aws.local.endpoint") else None
 
   lazy val authKeyStoreBucket = string("auth.keystore.bucket")
 
@@ -67,7 +70,17 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
 
   val services = new Services(domainRoot, serviceHosts, corsAllowedOrigins)
 
-  private def getKinesisConfigForStream(streamName: String) = KinesisSenderConfig(awsRegion, awsCredentials, awsLocalEndpoint, isDev, streamName)
+  def awsCredentials: AWSCredentialsProvider = new AWSCredentialsProviderChain(
+    new ProfileCredentialsProvider("media-service"),
+    InstanceProfileCredentialsProvider.getInstance()
+  )
+
+  final def awsEndpointConfiguration: Option[EndpointConfiguration] = awsLocalEndpoint match {
+    case Some(endpoint) if isDev => Some(new EndpointConfiguration(endpoint, awsRegion))
+    case _ => None
+  }
+
+  private def getKinesisConfigForStream(streamName: String) = KinesisSenderConfig(awsRegion, awsCredentials, awsEndpointConfiguration, streamName)
 
   final def getStringSet(key: String): Set[String] = Try {
     configuration.get[Seq[String]](key)
