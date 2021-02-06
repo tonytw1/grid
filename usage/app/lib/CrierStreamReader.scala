@@ -1,30 +1,22 @@
 package lib
 
-import java.net.InetAddress
-import java.util.UUID
-
 import com.amazonaws.auth._
-import com.amazonaws.auth.InstanceProfileCredentialsProvider
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
 import com.amazonaws.services.kinesis.clientlibrary.interfaces.{IRecordProcessor, IRecordProcessorFactory}
 import com.amazonaws.services.kinesis.clientlibrary.lib.worker.{InitialPositionInStream, KinesisClientLibConfiguration, Worker}
 import com.gu.mediaservice.lib.logging.GridLogging
 
+import java.net.InetAddress
+import java.util.UUID
+
 class CrierStreamReader(config: UsageConfig) extends GridLogging {
 
   lazy val workerId: String = InetAddress.getLocalHost.getCanonicalHostName + ":" + UUID.randomUUID()
 
-  val credentialsProvider = new AWSCredentialsProviderChain(
-    new ProfileCredentialsProvider("media-service"),  // TODO Remove this deep reference to AWS profile
-    InstanceProfileCredentialsProvider.getInstance()
-  )
-
-  private lazy val dynamoCredentialsProvider = credentialsProvider
-
   lazy val sessionId: String = "session" + Math.random()
   val initialPosition = InitialPositionInStream.TRIM_HORIZON
 
-  private def kinesisCredentialsProvider(arn: String)  = new AWSCredentialsProviderChain(
+  private def capiAwsKinesisCredentials(arn: String): AWSCredentialsProviderChain = new AWSCredentialsProviderChain(
     new ProfileCredentialsProvider("capi"),
     new STSAssumeRoleSessionCredentialsProvider.Builder(arn, sessionId).build()
   )
@@ -33,9 +25,9 @@ class CrierStreamReader(config: UsageConfig) extends GridLogging {
     new KinesisClientLibConfiguration(
       kinesisReaderConfig.appName,
       kinesisReaderConfig.streamName,
-      kinesisCredentialsProvider(kinesisReaderConfig.arn),
-      dynamoCredentialsProvider,
-      credentialsProvider,
+      capiAwsKinesisCredentials(kinesisReaderConfig.arn),
+      config.awsCredentials,
+      config.awsCredentials,
       workerId
     ).withInitialPositionInStream(initialPosition)
      .withRegionName(config.awsRegionName)

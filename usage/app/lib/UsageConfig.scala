@@ -45,7 +45,7 @@ class UsageConfig(resources: GridConfigResources) extends CommonConfig(resources
   val crierLiveKinesisStream = Try { string("crier.live.name") }
   val crierPreviewKinesisStream = Try { string("crier.preview.name") }
 
-  val crierLiveArn = Try { string("crier.live.arn") }
+  val crierLiveArn = Try { string("crier.live.arn") } // TODO it's not entirely clear what type of thing this ARN refers to; is it a Kinesis stream?
   val crierPreviewArn = Try { string("crier.preview.arn") }
 
   val liveKinesisReaderConfig: Try[KinesisReaderConfig] = for {
