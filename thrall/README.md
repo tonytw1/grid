@@ -29,8 +29,11 @@ The active Play config file is:
 
 So a conf file can be past in like so:
 ```
-docker run -it -v /Users/tony/git/forks/grid/thrall/application.conf:/usr/share/thrall/conf/application.conf eu.gcr.io/grid-301122/thrall:latest
+docker run -it -p 9000:9000 -v /Users/tony/git/forks/grid/thrall/application.conf:/usr/share/thrall/conf/application.conf eu.gcr.io/grid-301122/thrall:latest
 ```
+
+Thrall will be visible on ```http://localhost:9000```
+
 
 The following configuration must be supplied:
 
