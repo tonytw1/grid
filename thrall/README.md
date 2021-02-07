@@ -56,5 +56,4 @@ which is packaged into ```/usr/share/thrall/conf/logback.xml``` in the the Thral
 
 ## AWS authentication
 
-TODO Migrate to access tokens
-new ProfileCredentialsProvider("media-service")
+Provide access key and secret on ```aws.accessKey``` and ```aws.accessSecret```

@@ -1,17 +1,15 @@
 package com.gu.mediaservice.lib.config
 
-import java.util.UUID
-
 import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, BasicAWSCredentials, InstanceProfileCredentialsProvider}
+import com.amazonaws.auth._
 import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.gu.mediaservice.lib.aws.{AwsClientBuilderUtils, KinesisSenderConfig}
 import com.typesafe.config.ConfigException
 import com.typesafe.scalalogging.StrictLogging
 import play.api.Configuration
 
+import java.util.UUID
 import scala.util.Try
-
 
 abstract class CommonConfig(val configuration: Configuration) extends AwsClientBuilderUtils with StrictLogging {
   final val elasticsearchStack = "media-service"
@@ -74,14 +72,14 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
     // Allow key based auth in container based installs which don't want to provision profile files in the container image
     val keyBasedCredentialProvider = stringOpt("aws.accessKey").flatMap { accessKey =>
       stringOpt("aws.accessSecret").map { accessSecret =>
-        new AWSCredentialsProviderChain {
-          new BasicAWSCredentials(accessKey, accessSecret)
-        }
+        logger.info("Using access key and secret AWS credentials")
+        new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, accessSecret))
       }
     }
 
     keyBasedCredentialProvider.getOrElse {
       // Guardian's profile and instance profile based chain
+      logger.info("Using media-service profile AWS credentials")
       new AWSCredentialsProviderChain(
         new ProfileCredentialsProvider("media-service"),
         InstanceProfileCredentialsProvider.getInstance()
