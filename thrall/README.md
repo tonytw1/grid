@@ -57,3 +57,8 @@ which is packaged into ```/usr/share/thrall/conf/logback.xml``` in the the Thral
 ## AWS authentication
 
 Provide access key and secret on ```aws.accessKey``` and ```aws.accessSecret```
+
+
+## TODO
+
+Disable unwanted Kinesis cloudwatch metrics.
