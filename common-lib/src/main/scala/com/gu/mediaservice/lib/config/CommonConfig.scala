@@ -1,10 +1,10 @@
 package com.gu.mediaservice.lib.config
 
-import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, InstanceProfileCredentialsProvider}
-import com.amazonaws.auth.profile.ProfileCredentialsProvider
-import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
-
 import java.util.UUID
+
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+import com.amazonaws.auth.{AWSCredentialsProvider, AWSCredentialsProviderChain, BasicAWSCredentials, InstanceProfileCredentialsProvider}
+import com.amazonaws.client.builder.AwsClientBuilder.EndpointConfiguration
 import com.gu.mediaservice.lib.aws.{AwsClientBuilderUtils, KinesisSenderConfig}
 import com.typesafe.config.ConfigException
 import com.typesafe.scalalogging.StrictLogging
@@ -70,10 +70,24 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
 
   val services = new Services(domainRoot, serviceHosts, corsAllowedOrigins)
 
-  def awsCredentials: AWSCredentialsProvider = new AWSCredentialsProviderChain(
-    new ProfileCredentialsProvider("media-service"),
-    InstanceProfileCredentialsProvider.getInstance()
-  )
+  def awsCredentials: AWSCredentialsProvider = {
+    // Allow key based auth in container based installs which don't want to provision profile files in the container image
+    val keyBasedCredentialProvider = stringOpt("aws.accessKey").flatMap { accessKey =>
+      stringOpt("aws.accessSecret").map { accessSecret =>
+        new AWSCredentialsProviderChain {
+          new BasicAWSCredentials(accessKey, accessSecret)
+        }
+      }
+    }
+
+    keyBasedCredentialProvider.getOrElse {
+      // Guardian's profile and instance profile based chain
+      new AWSCredentialsProviderChain(
+        new ProfileCredentialsProvider("media-service"),
+        InstanceProfileCredentialsProvider.getInstance()
+      )
+    }
+  }
 
   final def awsEndpointConfiguration: Option[EndpointConfiguration] = awsLocalEndpoint match {
     case Some(endpoint) if isDev => Some(new EndpointConfiguration(endpoint, awsRegion))
