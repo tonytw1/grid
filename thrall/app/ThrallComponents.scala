@@ -28,7 +28,7 @@ class ThrallComponents(context: Context) extends GridComponents(context, new Thr
     replicas = config.elasticsearch6Replicas
   )
 
-  val es = new ElasticSearch(esConfig, Some(thrallMetrics))
+  val es = new ElasticSearch(esConfig, None)
   es.ensureAliasAssigned()
 
   val highPriorityKinesisConfig: KinesisClientLibConfiguration = KinesisConfig.kinesisConfig(config.kinesisConfig)
