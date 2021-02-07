@@ -18,7 +18,6 @@ import scala.concurrent.{ExecutionContext, Future, TimeoutException}
 import scala.util.{Failure, Success, Try}
 
 class ThrallEventConsumer(es: ElasticSearch,
-                          thrallMetrics: ThrallMetrics,
                           store: ThrallStore,
                           metadataEditorNotifications: MetadataEditorNotifications,
                           syndicationRightsOps: SyndicationRightsOps,
