@@ -14,3 +14,7 @@ RUN /usr/bin/unzip /tmp/image-loader-0.1.zip
 RUN mv /image-loader-0.1 /usr/share/image-loader
 CMD ["/usr/share/image-loader/bin/image-loader"]
 
+COPY cmyk.icc /usr/share/image-loader
+COPY facebook-TINYsRGB_c2.icc /usr/share/image-loader
+COPY grayscale.icc /usr/share/image-loader
+COPY srgb.icc /usr/share/image-loader
