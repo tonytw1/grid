@@ -244,13 +244,8 @@ def playProject(projectName: String, port: Int, path: Option[String] = None): Pr
     .settings(commonSettings ++ buildInfo ++ Seq(
       playDefaultPort := port,
 
-      debianPackageDependencies := Seq("openjdk-8-jre-headless"),
-      maintainer in Linux := "Guardian Developers <dig.dev.software@theguardian.com>",
-      packageSummary in Linux := description.value,
-      packageDescription := description.value,
-
       mappings in Universal ++= Seq(
-        file("common-lib/src/main/resources/application.conf") -> "conf/application.conf",
+        file("common-lib/src/main/resources/application.conf") -> "conf/application.conf",  // TODO remove this to force images to always provided config
         file("common-lib/src/main/resources/logback.xml") -> "conf/logback.xml"
       ),
       javaOptions in Universal ++= Seq(
