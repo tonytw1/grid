@@ -17,8 +17,11 @@ This produces this zip file:
 thrall/target/universal/thrall-0.1.zip
 ```
 
-This archive should extracted to /usr/share/thrall
+This archive should extracted to /usr/share/thrall inside the image
 
+```
+docker build/thrall
+```
 
 ## Running from an image
 
