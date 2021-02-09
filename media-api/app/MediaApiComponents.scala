@@ -3,6 +3,7 @@ import com.gu.mediaservice.lib.elasticsearch.ElasticSearchConfig
 import com.gu.mediaservice.lib.imaging.ImageOperations
 import com.gu.mediaservice.lib.management.{ElasticSearchHealthCheck, ManagementWithPermissions}
 import com.gu.mediaservice.lib.play.GridComponents
+import com.gu.mediaservice.model.Agency
 import controllers._
 import lib._
 import lib.elasticsearch.ElasticSearch
@@ -28,12 +29,21 @@ class MediaApiComponents(context: Context) extends GridComponents(context, new M
 
   val s3Client = new S3Client(config)
 
-  val usageQuota = new UsageQuota(config, actorSystem.scheduler)
-  usageQuota.quotaStore.update()
-  usageQuota.scheduleUpdates()
-  applicationLifecycle.addStopHook(() => Future{usageQuota.stopUpdates()})
+  val usageQuota: Option[UsageQuota] = None // Some(new UsageQuota(config, actorSystem.scheduler))
+  usageQuota.foreach { usageQuota =>
+    usageQuota.quotaStore.update()
+    usageQuota.scheduleUpdates()
+    applicationLifecycle.addStopHook(() => Future {
+      usageQuota.stopUpdates()
+    })
+  }
 
-  val elasticSearch = new ElasticSearch(config, mediaApiMetrics, es6Config, () => usageQuota.usageStore.overQuotaAgencies)
+  private val agencies: () => List[Agency] = () => usageQuota.map(_.usageStore.overQuotaAgencies).getOrElse{
+    def noAgencies: () => List[Agency] = () => {List.empty}
+    noAgencies.apply()
+  }
+
+  val elasticSearch = new ElasticSearch(config, mediaApiMetrics, es6Config, agencies)
   elasticSearch.ensureAliasAssigned()
 
   val imageResponse = new ImageResponse(config, s3Client, usageQuota)

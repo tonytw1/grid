@@ -18,11 +18,11 @@ import play.utils.UriEncoding
 
 import scala.util.{Failure, Try}
 
-class ImageResponse(config: MediaApiConfig, s3Client: S3Client, usageQuota: UsageQuota)
+class ImageResponse(config: MediaApiConfig, s3Client: S3Client, usageQuota: Option[UsageQuota])
   extends EditsResponse with GridLogging {
 
   //  implicit val dateTimeFormat = DateFormat
-  implicit val usageQuotas = usageQuota
+  implicit val usageQuotas = usageQuota.get // TODO
 
   object Costing extends CostCalculator {
     val quotas = usageQuotas

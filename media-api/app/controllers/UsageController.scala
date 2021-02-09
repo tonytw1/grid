@@ -6,13 +6,14 @@ import com.gu.mediaservice.lib.auth.Authentication.Principal
 import com.gu.mediaservice.model.Agencies
 import lib._
 import lib.elasticsearch.ElasticSearch
+import org.joda.time.DateTime
 import play.api.mvc.Security.AuthenticatedRequest
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class UsageController(auth: Authentication, config: MediaApiConfig, elasticSearch: ElasticSearch, usageQuota: UsageQuota,
+class UsageController(auth: Authentication, config: MediaApiConfig, elasticSearch: ElasticSearch, usageQuota: Option[UsageQuota],
                       override val controllerComponents: ControllerComponents)(implicit val ec: ExecutionContext)
   extends BaseController with ArgoHelpers {
 
@@ -47,8 +48,9 @@ class UsageController(auth: Authentication, config: MediaApiConfig, elasticSearc
     image <- Future { imageOption.get }
       .recover { case _ => throw new ImageNotFound }
 
-    usageStatus <- usageQuota.usageStore.getUsageStatusForUsageRights(image.usageRights)
-
+    usageStatus <- usageQuota.map { usageQuota =>
+      usageQuota.usageStore.getUsageStatusForUsageRights(image.usageRights)
+    }.getOrElse(throw NoUsageQuota()) // TODO correct nothing response to this?
   } yield usageStatus
 
 
@@ -64,7 +66,13 @@ class UsageController(auth: Authentication, config: MediaApiConfig, elasticSearc
   }
 
   def quotas = auth.async { request =>
-    usageQuota.usageStore.getUsageStatus()
+    usageQuota.map { usageQuota =>
+      usageQuota.usageStore.getUsageStatus()
+    }.getOrElse {
+      Future.successful {
+        StoreAccess(Map.empty, DateTime.now) // TODO what is a good nothing response?
+      }
+    }
       .map((s: StoreAccess) => respond(s))
       .recover {
         case e => respondError(InternalServerError, "unknown-error", e.toString)
