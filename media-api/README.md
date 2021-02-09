@@ -24,3 +24,37 @@ http://media-ser-mediaapi-1uzj4tw8g9lmy-1465883965.eu-west-1.elb.amazonaws.com/i
 
 See the [routes file](https://github.com/guardian/media-service/blob/master/media-api/conf/routes) for more API
 "documentation".
+
+
+## Build
+
+```
+sbt media-api/dist
+```
+
+```
+docker build media-api/
+```
+
+## Required configuration
+
+
+### Configuration the Quota Store
+
+Requires it's own s3 bucket
+```
+s3.config.bucket
+```
+
+[
+  {agency: count}
+
+]
+
+## Running from an image
+
+```
+docker run -it -p 9001:9001 -v /Users/tony/git/forks/grid/media-api/application.conf:/usr/share/media-api/conf/application.conf eu.gcr.io/grid-301122/media-api:latest
+```
+
+Media API will be visible on ```http://localhost:9001```
