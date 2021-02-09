@@ -1,0 +1,9 @@
+options:
+    machineType: 'N1_HIGHCPU_8'
+steps:
+  - name: 'gcr.io/$PROJECT_ID/scala-sbt'
+    args: ['media-api/dist']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/media-api', 'media-api']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/$PROJECT_ID/media-api']
