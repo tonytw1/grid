@@ -42,6 +42,8 @@ Key auth and Pandas for machine and user auth.
 
 ## Uploading an image
 
+Update an image file and submit the optional original filename.
+
 ```
-curl -H "X-Gu-Media-Key:my-api-key" -XPOST --data-binary "@my-image.jpg" http://localhost:9003/images
+curl -H "X-Gu-Media-Key:my-api-key" -XPOST --data-binary "@my-image.jpg" --data filename=my-image.jpg http://localhost:9003/images?filename=my-image.jpg
 ```
