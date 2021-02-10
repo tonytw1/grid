@@ -40,10 +40,10 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
   val localLogShipping: Boolean = sys.env.getOrElse("LOCAL_LOG_SHIPPING", "false").toBoolean
 
   val thrallKinesisStream = string("thrall.kinesis.stream.name")
-  val thrallKinesisLowPriorityStream = string("thrall.kinesis.lowPriorityStream.name")
+  lazy val thrallKinesisLowPriorityStream = string("thrall.kinesis.lowPriorityStream.name")
 
   val thrallKinesisStreamConfig = getKinesisConfigForStream(thrallKinesisStream)
-  val thrallKinesisLowPriorityStreamConfig = getKinesisConfigForStream(thrallKinesisLowPriorityStream)
+  lazy val thrallKinesisLowPriorityStreamConfig = getKinesisConfigForStream(thrallKinesisLowPriorityStream)
 
   val requestMetricsEnabled: Boolean = boolean("metrics.request.enabled")
 
