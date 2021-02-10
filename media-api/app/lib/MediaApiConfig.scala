@@ -11,11 +11,10 @@ case class StoreConfig(
 )
 
 class MediaApiConfig(resources: GridConfigResources) extends CommonConfig(resources.configuration) {
-  val configBucket: String = string("s3.config.bucket")
-  val usageMailBucket: String = string("s3.usagemail.bucket")
+  val configBucket = stringOpt("s3.config.bucket")
+  val quotaStoreKey = stringOpt("quota.store.key")
 
-  val quotaStoreKey: String = string("quota.store.key")
-  val quotaStoreConfig: StoreConfig = StoreConfig(configBucket, quotaStoreKey)
+  val usageMailBucket: String = string("s3.usagemail.bucket")
 
   // quota updates can only be turned off in DEV
   val quotaUpdateEnabled: Boolean = if (isDev) boolean("quota.update.enabled") else true

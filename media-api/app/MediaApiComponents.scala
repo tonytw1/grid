@@ -29,21 +29,20 @@ class MediaApiComponents(context: Context) extends GridComponents(context, new M
 
   val s3Client = new S3Client(config)
 
-  val usageQuota: Option[UsageQuota] = None // Some(new UsageQuota(config, actorSystem.scheduler))
-  usageQuota.foreach { usageQuota =>
-    usageQuota.quotaStore.update()
-    usageQuota.scheduleUpdates()
+  val usageQuota: UsageQuota = config.configBucket.map { _ =>
+    val guardianUsageQuota = new GuardianUsageQuota(config, actorSystem.scheduler)
+    guardianUsageQuota.quotaStore.update()
+    guardianUsageQuota.scheduleUpdates()
     applicationLifecycle.addStopHook(() => Future {
-      usageQuota.stopUpdates()
+      guardianUsageQuota.stopUpdates()
     })
+    guardianUsageQuota
+
+  }.getOrElse {
+    new UnlimitedUsageQuota()
   }
 
-  private val agencies: () => List[Agency] = () => usageQuota.map(_.usageStore.overQuotaAgencies).getOrElse{
-    def noAgencies: () => List[Agency] = () => {List.empty}
-    noAgencies.apply()
-  }
-
-  val elasticSearch = new ElasticSearch(config, mediaApiMetrics, es6Config, agencies)
+  val elasticSearch = new ElasticSearch(config, mediaApiMetrics, es6Config, () => usageQuota.overQuotaAgencies)
   elasticSearch.ensureAliasAssigned()
 
   val imageResponse = new ImageResponse(config, s3Client, usageQuota)
