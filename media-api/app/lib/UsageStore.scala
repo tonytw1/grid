@@ -119,10 +119,10 @@ object UsageStore extends GridLogging {
 }
 
 class UsageStore(
-  bucket: String,
-  config: MediaApiConfig,
-  quotaStore: QuotaStore
-)(implicit val ec: ExecutionContext) extends BaseStore[String, UsageStatus](bucket, config) with GridLogging {
+                  usageMailBucket: String,  // TODO what does this mean?
+                  config: MediaApiConfig,
+                  quotaStore: QuotaStore
+)(implicit val ec: ExecutionContext) extends BaseStore[String, UsageStatus](usageMailBucket, config) with GridLogging {
   import UsageStore._
 
   def getUsageStatusForUsageRights(usageRights: UsageRights): Future[UsageStatus] = {
