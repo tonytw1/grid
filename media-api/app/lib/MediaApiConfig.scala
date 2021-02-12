@@ -24,7 +24,6 @@ class MediaApiConfig(resources: GridConfigResources) extends CommonConfig(resour
   val imagesAlias: String = string("es.index.aliases.read")
 
   val elasticsearch6Url: String =  string("es6.url")
-  val elasticsearch6Cluster: String = string("es6.cluster")
   val elasticsearch6Shards: Int = string("es6.shards").toInt
   val elasticsearch6Replicas: Int = string("es6.replicas").toInt
 
