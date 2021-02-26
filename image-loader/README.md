@@ -40,7 +40,9 @@ Authentication
 Key auth and Pandas for machine and user auth.
 
 
-## Uploading an image
+## Example requests
+
+### Uploading an image
 
 Update an image file and submit the optional original filename.
 

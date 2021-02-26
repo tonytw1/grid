@@ -58,3 +58,12 @@ docker run -it -p 9001:9001 -v /Users/tony/git/forks/grid/media-api/application.
 ```
 
 Media API will be visible on ```http://localhost:9001```
+
+
+## Example requests
+
+### List images
+
+```
+curl -H "X-Gu-Media-Key:my-api-key" http://localhost:9001/images
+```
