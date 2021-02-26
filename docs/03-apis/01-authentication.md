@@ -2,17 +2,28 @@
 
 There are two ways to authenticate with Grid.
 
-## Panda Auth
+## Panda Auth (User auth)
 This is typically used for client-server authentication.
 
 We use the [pan-domain-authentication](https://github.com/guardian/pan-domain-authentication) library to authenticate
 using Google.
 
-## API Keys
+## API Keys (Machine auth)
 This is typically used for server-server authentication.
 
 API keys are stored in the `KeyBucket` of the cloudformation stack; drop a key file here and it'll get picked by Grid
 within 10 minutes and you'll be able to make authenticated calls.
+
+The filename of the keyfile is the API key.
+The contents of the file is a user readable descripe of the key.
+
+ie.
+A Dev key of '123-abc' would be represented with this file:
+
+```123-abc-key```
+```
+DEV Key
+```
 
 Note `setup.sh` creates an initial API key `dev-`.
 
