@@ -118,8 +118,7 @@ object UsageStore extends GridLogging {
   }
 }
 
-class UsageStore(
-                  usageMailBucket: String,  // TODO what does this mean?
+class UsageStore(usageMailBucket: String,  // TODO what does this mean?
                   config: MediaApiConfig,
                   quotaStore: QuotaStore
 )(implicit val ec: ExecutionContext) extends BaseStore[String, UsageStatus](usageMailBucket, config) with GridLogging {

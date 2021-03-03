@@ -9,16 +9,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.util.Try
 
-class GuardianUsageQuota(config: MediaApiConfig, scheduler: Scheduler) extends UsageQuota {
+class GuardianUsageQuota(config: MediaApiConfig, scheduler: Scheduler, quotaStoreKey: String, quotaStoreBucket: String, usageMailBucket: String) extends UsageQuota {
 
   val quotaStore = new QuotaStore(
-    config.quotaStoreKey.get, // TODO push naked gets up
-    config.configBucket.get,
+    quotaStoreKey,
+    quotaStoreBucket,
     config
   )
 
   val usageStore = new UsageStore(
-    config.usageMailBucket,
+    usageMailBucket,
     config,
     quotaStore
   )

@@ -30,7 +30,7 @@ class MediaApiComponents(context: Context) extends GridComponents(context, new M
   val s3Client = new S3Client(config)
 
   val usageQuota: UsageQuota = config.configBucket.map { _ =>
-    val guardianUsageQuota = new GuardianUsageQuota(config, actorSystem.scheduler)
+    val guardianUsageQuota = new GuardianUsageQuota(config, actorSystem.scheduler, config.quotaStoreKey.get, config.configBucket.get, config.usageMailBucket ) // TODO Push up naked gets
     guardianUsageQuota.quotaStore.update()
     guardianUsageQuota.scheduleUpdates()
     applicationLifecycle.addStopHook(() => Future {
