@@ -1,9 +1,9 @@
 import com.gu.mediaservice.lib.aws.ThrallMessageSender
 import com.gu.mediaservice.lib.elasticsearch.ElasticSearchConfig
 import com.gu.mediaservice.lib.imaging.ImageOperations
+import com.gu.mediaservice.lib.logging.GridLogging
 import com.gu.mediaservice.lib.management.{ElasticSearchHealthCheck, ManagementWithPermissions}
 import com.gu.mediaservice.lib.play.GridComponents
-import com.gu.mediaservice.model.Agency
 import controllers._
 import lib._
 import lib.elasticsearch.ElasticSearch
@@ -12,7 +12,7 @@ import router.Routes
 
 import scala.concurrent.Future
 
-class MediaApiComponents(context: Context) extends GridComponents(context, new MediaApiConfig(_)) {
+class MediaApiComponents(context: Context) extends GridComponents(context, new MediaApiConfig(_)) with GridLogging {
   final override val buildInfo = utils.buildinfo.BuildInfo
 
   val imageOperations = new ImageOperations(context.environment.rootPath.getAbsolutePath)
@@ -29,17 +29,21 @@ class MediaApiComponents(context: Context) extends GridComponents(context, new M
 
   val s3Client = new S3Client(config)
 
-  val usageQuota: UsageQuota = config.configBucket.map { _ =>
-    val guardianUsageQuota = new GuardianUsageQuota(config, actorSystem.scheduler, config.quotaStoreKey.get, config.configBucket.get, config.usageMailBucket ) // TODO Push up naked gets
+  private val usageQuota = (for {
+    quotaStoreKey <- config.quotaStoreKey
+    quotaStoreBucket <- config.configBucket
+    usageMailBucket <- config.usageMailBucket
+  } yield {
+    val guardianUsageQuota = new GuardianUsageQuota(config, actorSystem.scheduler, quotaStoreKey, quotaStoreBucket, usageMailBucket)
     guardianUsageQuota.quotaStore.update()
     guardianUsageQuota.scheduleUpdates()
     applicationLifecycle.addStopHook(() => Future {
       guardianUsageQuota.stopUpdates()
     })
     guardianUsageQuota
-
-  }.getOrElse {
-    new UnlimitedUsageQuota()
+  }).getOrElse {
+    logger.info("Guardian usage quota configuration not found. Using unlimited quotas.")
+    new UnlimitedUsageQuota
   }
 
   val elasticSearch = new ElasticSearch(config, mediaApiMetrics, es6Config, () => usageQuota.overQuotaAgencies)

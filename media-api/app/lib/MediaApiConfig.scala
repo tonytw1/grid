@@ -14,7 +14,7 @@ class MediaApiConfig(resources: GridConfigResources) extends CommonConfig(resour
   val configBucket = stringOpt("s3.config.bucket")
   val quotaStoreKey = stringOpt("quota.store.key")
 
-  val usageMailBucket: String = string("s3.usagemail.bucket")
+  val usageMailBucket = stringOpt("s3.usagemail.bucket")
 
   // quota updates can only be turned off in DEV
   val quotaUpdateEnabled: Boolean = if (isDev) boolean("quota.update.enabled") else true

@@ -45,6 +45,16 @@ Requires it's own s3 bucket
 ```
 s3.config.bucket
 ```
+```
+quota.store.key
+```
+```
+s3.usagemail.bucket
+```
+
+If these config elements are not provided the media API will default to unlimited quotas.
+
+
 
 [
   {agency: count}
