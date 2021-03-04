@@ -5,7 +5,7 @@ import com.gu.mediaservice.lib.config.{CommonConfig, GridConfigResources}
 
 
 class EditsConfig(resources: GridConfigResources) extends CommonConfig(resources.configuration) {
-  val dynamoRegion: Region = RegionUtils.getRegion(string("aws.region"))
+  val dynamoRegion: Region = RegionUtils.getRegion(awsRegion)
 
   val editsTable = string("dynamo.table.edits")
 
