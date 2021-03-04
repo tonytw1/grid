@@ -1,3 +1,6 @@
 # Kahuna
 
-The media search & management app.
+The Grid's user interface.
+
+
+
