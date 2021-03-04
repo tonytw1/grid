@@ -42,7 +42,7 @@ abstract class CommonConfig(val configuration: Configuration) extends AwsClientB
   lazy val thrallKinesisStream = string("thrall.kinesis.stream.name")
   lazy val thrallKinesisLowPriorityStream = string("thrall.kinesis.lowPriorityStream.name")
 
-  val thrallKinesisStreamConfig = getKinesisConfigForStream(thrallKinesisStream)
+  lazy val thrallKinesisStreamConfig = getKinesisConfigForStream(thrallKinesisStream)
   lazy val thrallKinesisLowPriorityStreamConfig = getKinesisConfigForStream(thrallKinesisLowPriorityStream)
 
   val requestMetricsEnabled: Boolean = boolean("metrics.request.enabled")
