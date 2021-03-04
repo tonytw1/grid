@@ -1,0 +1,9 @@
+options:
+    machineType: 'N1_HIGHCPU_8'
+steps:
+  - name: 'gcr.io/$PROJECT_ID/scala-sbt'
+    args: ['auth/dist']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'eu.gcr.io/$PROJECT_ID/auth', 'auth']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'eu.gcr.io/$PROJECT_ID/auth']
